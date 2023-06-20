@@ -4,7 +4,7 @@ import React from "react";
 export function TimeSlider({timeResolution}: {timeResolution: number}) {
     return (<>
         <Text>Time Resolution</Text>
-        <Slider defaultValue={60} min={0} max={100} step={1} w={"75%"} display={"inline-block"}>
+        <Slider defaultValue={500} min={200} max={2000} step={1} w={"75%"} display={"inline-block"}>
             <SliderTrack bg='green.100'>
                 <Box position='relative' right={50}/>
                 <SliderFilledTrack bg='green.500'/>

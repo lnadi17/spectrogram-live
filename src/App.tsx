@@ -34,6 +34,7 @@ function App() {
         freqResolution: 0,
         timeResolution: 0,
         timeSamplesOverlap: 0,
+        sampleRate: 44800,
         window: {
             name: "Rectangular",
             values: (t) => {

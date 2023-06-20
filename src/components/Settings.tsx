@@ -1,14 +1,3 @@
-import {
-    Box,
-    Flex,
-    Radio,
-    RadioGroup,
-    Slider,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack,
-    Text
-} from "@chakra-ui/react";
 import React from "react";
 import GetStream from "../scripts/Microphone";
 import {RecordButton} from "./RecordButton";
@@ -17,12 +6,15 @@ import {TimeSlider} from "./TimeSlider";
 import {FrequencySlider} from "./FrequencySlider";
 import {TimeSamplesSlider} from "./TimeSamplesSlider";
 import {WindowSelector} from "./WindowSelector";
-import {WindowFunction} from "../types/WindowFunction";
 
-function setMediaRecorder(setter: any) {
+function setMediaRecorder(setter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
         .then((stream) => {
             setter(new MediaRecorder(stream));
+            settingsSetter({
+                ...settings,
+                sampleRate: stream.getTracks()[0].getSettings().sampleRate
+            });
         })
         .catch((err) => {
             console.log("Failed to get media recorder", err);
@@ -41,7 +33,17 @@ function updateWindowFunction(windowName: string, settings: SettingsState, setti
     const currentWindow = settings.windowFunctions.find(item => item.name === windowName);
     if (currentWindow !== null) {
         settingsSetter({...settings, window: currentWindow});
-        console.log(currentWindow);
+    }
+}
+
+function updateSliderValues(timeResolution: number | null, freqResolution: number | null, timeSamplesOverlap: number | null, settingsSetter: any) {
+    if (timeResolution !== null) {
+        // freqResolution =
+        // settingsSetter()
+    } else if (freqResolution !== null) {
+
+    } else if (timeSamplesOverlap !== null) {
+
     }
 }
 
@@ -53,7 +55,7 @@ export function Settings({
                          }: { settings: SettingsState, settingsSetter: any, recorder: MediaRecorder | null, recorderSetter: any }) {
     return <>
         <RecordButton isRecording={recorder !== null}
-                      startCallback={() => setMediaRecorder(recorderSetter)}
+                      startCallback={() => setMediaRecorder(recorderSetter, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, recorderSetter)}/>
         <FrequencySlider freqResolution={settings.freqResolution}/>
         <TimeSlider timeResolution={settings.timeResolution}/>

@@ -1,12 +1,7 @@
 import {
-    Box,
     Flex,
     Radio,
     RadioGroup,
-    Slider,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack,
     Text
 } from "@chakra-ui/react";
 import React from "react";
