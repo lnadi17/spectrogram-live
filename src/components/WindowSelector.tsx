@@ -14,14 +14,15 @@ import {WindowFunction} from "../types/WindowFunction";
 
 export function WindowSelector({
                                    windowChoices,
-                                   currentWindow
-                               }: { windowChoices: Array<WindowFunction>, currentWindow: WindowFunction }) {
+                                   currentWindow,
+                                   handleChange
+                               }: { windowChoices: Array<WindowFunction>, currentWindow: WindowFunction, handleChange: (x: string) => void }) {
     return (<>
         <Text>Window Function</Text>
         <Flex>
-            <RadioGroup defaultValue={currentWindow.name} m={2}>
+            <RadioGroup defaultValue={currentWindow.name} m={2} onChange={handleChange}>
                 {windowChoices.map(window => {
-                    return <Radio px={1} colorScheme="blue" value={window.name}>
+                    return <Radio px={1} colorScheme="blue" value={window.name} key={window.name}>
                         {window.name}
                     </Radio>
                 })}

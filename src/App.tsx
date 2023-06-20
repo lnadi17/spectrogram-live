@@ -54,7 +54,7 @@ function App() {
                     <Canvas settings={settingsState} recorder={recorder}/>
                 </GridItem>
                 <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5}>
-                    <Settings settings={settingsState} recorder={recorder} recorderSetter={setRecorder}/>
+                    <Settings settings={settingsState} recorder={recorder} settingsSetter={setSettingsState} recorderSetter={setRecorder}/>
                 </GridItem>
             </Grid>
         </Flex>
