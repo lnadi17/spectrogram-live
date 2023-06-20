@@ -12,20 +12,19 @@ import {
 import React from "react";
 import {WindowFunction} from "../types/WindowFunction";
 
-export function WindowSelector({windowChoices}: {windowChoices: WindowFunction}) {
+export function WindowSelector({
+                                   windowChoices,
+                                   currentWindow
+                               }: { windowChoices: Array<WindowFunction>, currentWindow: WindowFunction }) {
     return (<>
         <Text>Window Function</Text>
         <Flex>
-            <RadioGroup defaultValue="2" m={2}>
-                <Radio px={1} colorScheme="blue" value="1">
-                    Rectangular
-                </Radio>
-                <Radio px={1} colorScheme="blue" value="2">
-                    Hanning
-                </Radio>
-                <Radio px={1} colorScheme="blue" value="3">
-                    Hamming
-                </Radio>
+            <RadioGroup defaultValue={currentWindow.name} m={2}>
+                {windowChoices.map(window => {
+                    return <Radio px={1} colorScheme="blue" value={window.name}>
+                        {window.name}
+                    </Radio>
+                })}
             </RadioGroup>
         </Flex>
     </>);

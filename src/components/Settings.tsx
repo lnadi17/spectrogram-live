@@ -48,6 +48,6 @@ export function Settings({
         <FrequencySlider freqResolution={settings.freqResolution} />
         <TimeSlider timeResolution={settings.timeResolution} />
         <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap} />
-        <WindowSelector windowChoices={settings.window}/>
+        <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}/>
     </>;
 }

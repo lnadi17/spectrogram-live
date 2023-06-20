@@ -6,6 +6,28 @@ import Canvas from "./components/Canvas";
 import Header from "./components/Header";
 import {Settings} from "./components/Settings";
 import {SettingsState} from "./types/SettingsState";
+import {WindowFunction} from "./types/WindowFunction";
+
+const windowFunctions : Array<WindowFunction> = [
+    {
+        name: "Rectangular",
+        values: (t: [number]) => {
+            return Array(t.length).fill(1) as [number];
+        }
+    },
+    {
+        name: "Hanning",
+        values: (t: [number]) => {
+            return Array(t.length).fill(1) as [number];
+        }
+    },
+    {
+        name: "Hamming",
+        values: (t: [number]) => {
+            return Array(t.length).fill(1) as [number];
+        }
+    }
+];
 
 function App() {
     const initialSettingsState: SettingsState = {
@@ -17,7 +39,8 @@ function App() {
             values: (t) => {
                 return Array(t.length).fill(1) as [number]
             }
-        }
+        },
+        windowFunctions: windowFunctions
     };
 
     const [settingsState, setSettingsState] = useState(initialSettingsState);

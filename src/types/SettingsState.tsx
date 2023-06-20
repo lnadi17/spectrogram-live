@@ -5,5 +5,6 @@ export interface SettingsState {
     freqResolution: number,
     timeResolution: number,
     timeSamplesOverlap: number,
-    window: WindowFunction
+    window: WindowFunction,
+    windowFunctions: Array<WindowFunction>
 }
