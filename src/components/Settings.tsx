@@ -36,14 +36,22 @@ function updateWindowFunction(windowName: string, settings: SettingsState, setti
     }
 }
 
-function updateSliderValues(timeResolution: number | null, freqResolution: number | null, timeSamplesOverlap: number | null, settingsSetter: any) {
+function updateSliderValues(timeResolution: number | null, freqResolution: number | null, timeSamplesOverlap: number | null, settings: SettingsState, settingsSetter: any) {
     if (timeResolution !== null) {
-        // freqResolution =
-        // settingsSetter()
+        settingsSetter({
+            ...settings,
+            timeResolution: timeResolution
+        });
     } else if (freqResolution !== null) {
-
+        settingsSetter({
+            ...settings,
+            freqResolution: freqResolution
+        });
     } else if (timeSamplesOverlap !== null) {
-
+        settingsSetter({
+            ...settings,
+            timeSamplesOverlap: timeSamplesOverlap
+        });
     }
 }
 
@@ -57,9 +65,12 @@ export function Settings({
         <RecordButton isRecording={recorder !== null}
                       startCallback={() => setMediaRecorder(recorderSetter, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, recorderSetter)}/>
-        <FrequencySlider freqResolution={settings.freqResolution}/>
-        <TimeSlider timeResolution={settings.timeResolution}/>
-        <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap}/>
+        <FrequencySlider freqResolution={settings.freqResolution}
+                         changeHandler={(v: number) => updateSliderValues(null, v, null, settings, settingsSetter)}/>
+        <TimeSlider timeResolution={settings.timeResolution}
+                    changeHandler={(v: number) => updateSliderValues(v, null, null, settings, settingsSetter)}/>
+        <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap}
+                           changeHandler={(v: number) => updateSliderValues(null, null, v, settings, settingsSetter)}/>
         <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}
                         handleChange={(value) => updateWindowFunction(value, settings, settingsSetter)}/>
     </>;
