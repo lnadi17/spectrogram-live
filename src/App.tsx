@@ -1,34 +1,37 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {
-    Box,
-    Button,
-    Container, Divider, Flex,
-    Grid,
-    GridItem,
-    Heading,
-    Radio,
-    RadioGroup,
-    Spacer,
-    Spinner, Stack, StackDivider,
-    Text, useBreakpointValue
-} from "@chakra-ui/react";
+import {Flex, Grid, GridItem} from "@chakra-ui/react";
 
 import Canvas from "./components/Canvas";
 import Header from "./components/Header";
-import Settings from "./components/Settings";
-
+import {Settings} from "./components/Settings";
+import {SettingsState} from "./types/SettingsState";
 
 function App() {
+    const initialSettingsState: SettingsState = {
+        freqResolution: 0,
+        timeResolution: 0,
+        timeSamplesOverlap: 0,
+        window: {
+            name: "Rectangular",
+            values: (t) => {
+                return Array(t.length).fill(1) as [number]
+            }
+        }
+    };
+
+    const [settingsState, setSettingsState] = useState(initialSettingsState);
+    const [recorder, setRecorder] = useState(null);
+
     return (
         <Flex h={"100vh"} direction={"column"}>
             <Header/>
             <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" flexGrow={1}>
                 <GridItem bg={"purple.700"} colSpan={{base: 6, md: 4}} p={5}>
-                    <Canvas/>
+                    <Canvas settings={settingsState} recorder={recorder}/>
                 </GridItem>
                 <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5}>
-                    <Settings/>
+                    <Settings settings={settingsState} recorder={recorder} recorderSetter={setRecorder}/>
                 </GridItem>
             </Grid>
         </Flex>
