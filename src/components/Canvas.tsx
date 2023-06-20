@@ -1,8 +1,12 @@
-import {Text} from "@chakra-ui/react";
+import {Box, Text} from "@chakra-ui/react";
 import React from "react";
 
 function Canvas() {
-    return <Text>Spectrogram here</Text>;
+    return (
+        <Box minH={"40vh"}>
+            <Text>Spectrogram here</Text>
+        </Box>
+    );
 }
 
 export default Canvas;

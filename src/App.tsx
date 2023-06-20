@@ -3,7 +3,7 @@ import './App.css';
 import {
     Box,
     Button,
-    Container, Divider,
+    Container, Divider, Flex,
     Grid,
     GridItem,
     Heading,
@@ -21,7 +21,7 @@ import Settings from "./components/Settings";
 
 function App() {
     return (
-        <Box h={"100vh"} display={"flex"} flexDir={"column"}>
+        <Flex h={"100vh"} direction={"column"}>
             <Header/>
             <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" flexGrow={1}>
                 <GridItem bg={"purple.700"} colSpan={{base: 6, md: 4}} p={5}>
@@ -31,7 +31,7 @@ function App() {
                     <Settings/>
                 </GridItem>
             </Grid>
-        </Box>
+        </Flex>
     );
 }
 
