@@ -11,7 +11,7 @@ import {
     RadioGroup,
     Spacer,
     Spinner, Stack, StackDivider,
-    Text
+    Text, useBreakpointValue
 } from "@chakra-ui/react";
 
 import Canvas from "./components/Canvas";

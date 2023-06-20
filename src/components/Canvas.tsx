@@ -3,7 +3,7 @@ import React from "react";
 
 function Canvas() {
     return (
-        <Box minH={"40vh"}>
+        <Box minH={"33vh"}>
             <Text>Spectrogram here</Text>
         </Box>
     );
