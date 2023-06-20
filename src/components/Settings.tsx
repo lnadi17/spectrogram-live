@@ -38,21 +38,16 @@ function updateWindowFunction(windowName: string, settings: SettingsState, setti
 
 function updateSliderValues(timeResolution: number | null, freqResolution: number | null, timeSamplesOverlap: number | null, settings: SettingsState, settingsSetter: any) {
     if (timeResolution !== null) {
-        settingsSetter({
-            ...settings,
-            timeResolution: timeResolution
-        });
+        freqResolution = settings.sampleRate / timeResolution;
     } else if (freqResolution !== null) {
-        settingsSetter({
-            ...settings,
-            freqResolution: freqResolution
-        });
+        timeResolution = settings.sampleRate / freqResolution;
     } else if (timeSamplesOverlap !== null) {
-        settingsSetter({
-            ...settings,
-            timeSamplesOverlap: timeSamplesOverlap
-        });
     }
+    settingsSetter({
+        ...settings,
+        timeResolution: timeResolution,
+        freqResolution: freqResolution
+    });
 }
 
 export function Settings({
@@ -65,9 +60,11 @@ export function Settings({
         <RecordButton isRecording={recorder !== null}
                       startCallback={() => setMediaRecorder(recorderSetter, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, recorderSetter)}/>
-        <FrequencySlider freqResolution={settings.freqResolution}
+        <FrequencySlider freqResolution={settings.freqResolution} min={settings.sampleRate / settings.maxTimeResolution}
+                         max={settings.sampleRate / settings.minTimeResolution}
                          changeHandler={(v: number) => updateSliderValues(null, v, null, settings, settingsSetter)}/>
-        <TimeSlider timeResolution={settings.timeResolution}
+        <TimeSlider timeResolution={settings.timeResolution} min={settings.minTimeResolution}
+                    max={settings.maxTimeResolution}
                     changeHandler={(v: number) => updateSliderValues(v, null, null, settings, settingsSetter)}/>
         <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap}
                            changeHandler={(v: number) => updateSliderValues(null, null, v, settings, settingsSetter)}/>

@@ -11,6 +11,6 @@ export function TimeSamplesSlider({timeSamples, changeHandler}: {timeSamples: nu
             </SliderTrack>
             <SliderThumb boxSize={3}/>
         </Slider>
-        <Text as="span" mx={1}>{timeSamples}</Text>
+        <Text as="span" mx={5}>{timeSamples}</Text>
     </>);
 }

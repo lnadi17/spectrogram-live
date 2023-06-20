@@ -34,13 +34,10 @@ function App() {
         freqResolution: 0,
         timeResolution: 0,
         timeSamplesOverlap: 0,
-        sampleRate: 44800,
-        window: {
-            name: "Rectangular",
-            values: (t) => {
-                return Array(t.length).fill(1) as [number]
-            }
-        },
+        sampleRate: 8000,
+        minTimeResolution: 200,
+        maxTimeResolution: 2000,
+        window: windowFunctions[0],
         windowFunctions: windowFunctions
     };
 
