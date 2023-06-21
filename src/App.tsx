@@ -33,7 +33,7 @@ function App() {
     const initialSettingsState: SettingsState = {
         freqResolution: 0,
         timeResolution: 200,
-        timeSamplesOverlap: 0,
+        timeSamplesOverlap: 100,
         sampleRate: 8000,
         minTimeResolution: 200,
         maxTimeResolution: 8000,

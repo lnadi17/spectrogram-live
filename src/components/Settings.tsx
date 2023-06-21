@@ -43,12 +43,20 @@ function updateSliderValues(timeResolution: number | null, freqResolution: numbe
         freqResolution = settings.sampleRate / timeResolution;
     } else if (freqResolution !== null) {
         timeResolution = settings.sampleRate / freqResolution;
-    } else if (timeSamplesOverlap !== null) {
     }
+
+    timeSamplesOverlap = timeSamplesOverlap || settings.timeSamplesOverlap;
+    timeResolution = timeResolution || settings.timeResolution;
+    freqResolution = freqResolution || settings.freqResolution;
+    if (timeSamplesOverlap > timeResolution! / 2) {
+        timeSamplesOverlap = timeResolution! / 2;
+    }
+
     settingsSetter({
         ...settings,
         timeResolution: timeResolution,
-        freqResolution: freqResolution
+        freqResolution: freqResolution,
+        timeSamplesOverlap: timeSamplesOverlap
     });
 }
 
@@ -68,7 +76,7 @@ export function Settings({
         <TimeSlider timeResolution={settings.timeResolution} min={settings.minTimeResolution}
                     max={settings.maxTimeResolution}
                     changeHandler={(v: number) => updateSliderValues(v, null, null, settings, settingsSetter)}/>
-        <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap}
+        <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap} max={settings.timeResolution / 2}
                            changeHandler={(v: number) => updateSliderValues(null, null, v, settings, settingsSetter)}/>
         <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}
                         handleChange={(value) => updateWindowFunction(value, settings, settingsSetter)}/>
