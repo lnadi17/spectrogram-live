@@ -7,13 +7,15 @@ import {FrequencySlider} from "./FrequencySlider";
 import {TimeSamplesSlider} from "./TimeSamplesSlider";
 import {WindowSelector} from "./WindowSelector";
 
-function setMediaRecorder(setter: any, settings: SettingsState, settingsSetter: any) {
+function startRecording(setter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
         .then((stream) => {
             setter(new MediaRecorder(stream));
+            const sampleRate = stream.getTracks()[0].getSettings().sampleRate || 8000;
             settingsSetter({
                 ...settings,
-                sampleRate: stream.getTracks()[0].getSettings().sampleRate
+                sampleRate: sampleRate,
+                freqResolution: sampleRate / settings.timeResolution
             });
         })
         .catch((err) => {
@@ -58,7 +60,7 @@ export function Settings({
                          }: { settings: SettingsState, settingsSetter: any, recorder: MediaRecorder | null, recorderSetter: any }) {
     return <>
         <RecordButton isRecording={recorder !== null}
-                      startCallback={() => setMediaRecorder(recorderSetter, settings, settingsSetter)}
+                      startCallback={() => startRecording(recorderSetter, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, recorderSetter)}/>
         <FrequencySlider freqResolution={settings.freqResolution} min={settings.sampleRate / settings.maxTimeResolution}
                          max={settings.sampleRate / settings.minTimeResolution}

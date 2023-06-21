@@ -6,8 +6,8 @@ export interface SettingsState {
     timeResolution: number,
     timeSamplesOverlap: number,
     sampleRate: number,
-    minTimeResolution: 200,
-    maxTimeResolution: 2000,
+    minTimeResolution: number,
+    maxTimeResolution: number,
     window: WindowFunction,
     windowFunctions: Array<WindowFunction>
 }
