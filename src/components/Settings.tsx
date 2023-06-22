@@ -10,12 +10,18 @@ import {WindowSelector} from "./WindowSelector";
 function startRecording(setter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
         .then((stream) => {
-            setter(new MediaRecorder(stream));
-            const sampleRate = stream.getTracks()[0].getSettings().sampleRate || 8000;
+            const context = new AudioContext();
+            const source = context.createMediaStreamSource(stream);
+            // Yes, this feature is no longer recommended according to docs, but other solutions are too complex as of now.
+            // Only the raw sound data is needed, the rest of the processing is still done in main thread.
+            const recorder = context.createScriptProcessor(16384, 1, 1);
+            source.connect(recorder);
+            recorder.connect(context.destination);
+            setter(recorder);
             settingsSetter({
                 ...settings,
-                sampleRate: sampleRate,
-                freqResolution: sampleRate / settings.timeResolution
+                sampleRate: context.sampleRate,
+                freqResolution: context.sampleRate / settings.timeResolution
             });
         })
         .catch((err) => {
