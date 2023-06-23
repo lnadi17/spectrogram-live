@@ -8,11 +8,68 @@ function padArray(array: number[], length: number, fill: number) {
     return length > array.length ? array.concat(Array(length - array.length).fill(fill)) : array;
 }
 
-function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState) {
-    let fftSize = 8192;
+function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState, fft: number[]) {
+    console.log(fft.length);
+    console.log(fft);
+    const fftSize = fft.length;
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
     canvasCtx.lineWidth = 1;
     canvasCtx.fillStyle = 'white';
-    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    canvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    const timeWidth = 5; // Canvas should have width of past 5 seconds
+    const oneSecondLength = canvasWidth / timeWidth; // Length of 1-second window in pixels
+    const xBinWidth = oneSecondLength * (settings.timeResolution / settings.sampleRate); // Width of current time frame in pixels
+    // console.log(fftSize);
+    // console.log(fft);
+
+    // Copy current image to the left/right
+    // var deltaY = deltaY0 / (i_max - i_min);
+    // if (document.getElementById("stop").checked == false) {
+    //     if (document.getElementById("scrolling").checked == true) {
+    //         var imgData = canvasCtx.getImageData(X0 + bin_width, Y0, deltaX0 - bin_width, deltaY0);
+    //         canvasCtx.putImageData(imgData, X0, Y0);
+    //     } else {
+    //         var imgData = canvasCtx.getImageData(X0 + 1, Y0, deltaX0 - bin_width - 1, deltaY0);
+    //         canvasCtx.putImageData(imgData, X0 + bin_width, Y0);
+    //
+    //     }
+    // }
+    // var y;
+    //     var myrgb = evaluate_cmap(value, colormap, false);
+    //     canvasCtx.strokeStyle = 'rgb(' + myrgb + ')';
+    for (let y = 0; y <= canvasHeight; y++) {
+        const normalizedHeight = y / canvasHeight;
+        const fftIndex = Math.floor(fftSize * normalizedHeight);
+        const amplitude = fft[fftIndex];
+        canvasCtx.strokeStyle = rgbToColorString(amplitude, amplitude, amplitude);
+        canvasCtx.beginPath();
+        canvasCtx.moveTo(canvasWidth, y);
+        canvasCtx.lineTo(canvasWidth - 100, y);
+        canvasCtx.stroke();
+    }
+}
+
+function rgbToColorString(red: number, green: number, blue: number) {
+    const clampedRed = Math.round(red * 255);
+    const clampedGreen = Math.round(green * 255);
+    const clampedBlue = Math.round(blue * 255);
+    return `rgb(${clampedRed}, ${clampedGreen}, ${clampedBlue})`;
+}
+
+function complexArrayToAbsolute(complexArray: number[]) {
+    const absoluteArray = [];
+
+    for (let i = 0; i < complexArray.length; i += 2) {
+        const real = complexArray[i];
+        const imaginary = complexArray[i + 1];
+        const absoluteValue = Math.sqrt(real * real + imaginary * imaginary);
+        absoluteArray.push(absoluteValue);
+    }
+
+    return absoluteArray;
 }
 
 
@@ -38,10 +95,10 @@ function Canvas({
         let input = padArray(chunk, f.size, 0);
         let out = new Array(f.size);
         f.realTransform(out, input);
+        out = complexArrayToAbsolute(out);
         if (canvas.current != null && canvasCtx.current != null) {
-            plotSpectrogram(canvas.current, canvasCtx.current, settings);
+            plotSpectrogram(canvas.current, canvasCtx.current, settings, out);
         }
-        // console.log(out);
     }, []);
 
     useEffect(() => {
