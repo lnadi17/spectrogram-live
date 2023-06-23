@@ -6,6 +6,9 @@ import {TimeSlider} from "./TimeSlider";
 import {FrequencySlider} from "./FrequencySlider";
 import {TimeSamplesSlider} from "./TimeSamplesSlider";
 import {WindowSelector} from "./WindowSelector";
+import {Button} from "@chakra-ui/react";
+
+let mus: any = [];
 
 function startRecording(setter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
@@ -15,7 +18,7 @@ function startRecording(setter: any, settings: SettingsState, settingsSetter: an
             // Yes, this feature is no longer recommended according to docs, but other solutions are too complex as of now.
             // Only the raw sound data is needed, the rest of the processing is still done in main thread.
             const recorder = context.createScriptProcessor(16384, 1, 1);
-            source.connect(context.createGain()).connect(recorder);
+            source.connect(recorder);
             recorder.connect(context.destination);
             setter(recorder);
             settingsSetter({
@@ -86,5 +89,48 @@ export function Settings({
                            changeHandler={(v: number) => updateSliderValues(null, null, v, settings, settingsSetter)}/>
         <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}
                         handleChange={(value) => updateWindowFunction(value, settings, settingsSetter)}/>
+        <Button as="a" id="asd" onClick={() => {
+            exportToCsv('musika', mus);
+        }}>End Stream</Button>
     </>;
+}
+function exportToCsv(filename: any, rows: any) {
+    var processRow = function (row: any) {
+        var finalVal = '';
+        for (var j = 0; j < row.length; j++) {
+            var innerValue = row[j] === null ? '' : row[j].toString();
+            if (row[j] instanceof Date) {
+                innerValue = row[j].toLocaleString();
+            };
+            var result = innerValue.replace(/"/g, '""');
+            if (result.search(/("|,|\n)/g) >= 0)
+                result = '"' + result + '"';
+            if (j > 0)
+                finalVal += ',';
+            finalVal += result;
+        }
+        return finalVal + '\n';
+    };
+
+    var csvFile = '';
+    for (var i = 0; i < rows.length; i++) {
+        csvFile += processRow(rows[i]);
+    }
+
+    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    if (false) { // IE 10+
+        // navigator.msSaveBlob(blob, filename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
 }
