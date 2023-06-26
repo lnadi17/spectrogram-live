@@ -9,47 +9,37 @@ function padArray(array: number[], length: number, fill: number) {
 }
 
 function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState, fft: number[]) {
-    console.log(fft.length);
-    console.log(fft);
-    const fftSize = fft.length;
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
+    function plot() {
+        console.log(fft.length);
+        console.log(fft);
+        const fftSize = fft.length;
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
 
-    canvasCtx.lineWidth = 1;
-    canvasCtx.fillStyle = 'white';
-    canvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+        canvasCtx.lineWidth = 1;
 
-    const timeWidth = 5; // Canvas should have width of past 5 seconds
-    const oneSecondLength = canvasWidth / timeWidth; // Length of 1-second window in pixels
-    const xBinWidth = oneSecondLength * (settings.timeResolution / settings.sampleRate); // Width of current time frame in pixels
-    // console.log(fftSize);
-    // console.log(fft);
+        const timeWidth = 5; // Canvas should have width of past 5 seconds
+        const oneSecondLength = canvasWidth / timeWidth; // Length of 1-second window in pixels
+        const xBinWidth = oneSecondLength * (settings.timeResolution / settings.sampleRate); // Width of current time frame in pixels
 
-    // Copy current image to the left/right
-    // var deltaY = deltaY0 / (i_max - i_min);
-    // if (document.getElementById("stop").checked == false) {
-    //     if (document.getElementById("scrolling").checked == true) {
-    //         var imgData = canvasCtx.getImageData(X0 + bin_width, Y0, deltaX0 - bin_width, deltaY0);
-    //         canvasCtx.putImageData(imgData, X0, Y0);
-    //     } else {
-    //         var imgData = canvasCtx.getImageData(X0 + 1, Y0, deltaX0 - bin_width - 1, deltaY0);
-    //         canvasCtx.putImageData(imgData, X0 + bin_width, Y0);
-    //
-    //     }
-    // }
-    // var y;
-    //     var myrgb = evaluate_cmap(value, colormap, false);
-    //     canvasCtx.strokeStyle = 'rgb(' + myrgb + ')';
-    for (let y = 0; y <= canvasHeight; y++) {
-        const normalizedHeight = y / canvasHeight;
-        const fftIndex = Math.floor(fftSize * normalizedHeight);
-        const amplitude = fft[fftIndex];
-        canvasCtx.strokeStyle = rgbToColorString(amplitude, amplitude, amplitude);
-        canvasCtx.beginPath();
-        canvasCtx.moveTo(canvasWidth, y);
-        canvasCtx.lineTo(canvasWidth - 100, y);
-        canvasCtx.stroke();
+        // Copy current image to the left
+        let imgData = canvasCtx.getImageData(xBinWidth, 0, canvasWidth - xBinWidth, canvasHeight);
+        canvasCtx.putImageData(imgData, 0, 0);
+
+        // var myrgb = evaluate_cmap(value, colormap, false);
+        // canvasCtx.strokeStyle = 'rgb(' + myrgb + ')';
+        for (let y = canvasHeight; y >= 0; y--) {
+            const normalizedHeight = y / canvasHeight;
+            const fftIndex = Math.floor(fftSize * (1 - normalizedHeight));
+            const amplitude = fft[fftIndex];
+            canvasCtx.strokeStyle = rgbToColorString(amplitude, amplitude, amplitude);
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(canvasWidth, y);
+            canvasCtx.lineTo(canvasWidth - xBinWidth, y);
+            canvasCtx.stroke();
+        }
     }
+    requestAnimationFrame(plot);
 }
 
 function rgbToColorString(red: number, green: number, blue: number) {
@@ -86,20 +76,20 @@ function Canvas({
         if (node != null) {
             console.log("Updating canvas and canvasCtx refs");
             canvas.current = node;
-            canvasCtx.current = node.getContext("2d", {willReadFrequently: true});
+            canvasCtx.current = node.getContext("2d", {willReadFrequently: true, opacity: false});
         }
     }, [])
 
     const processChunk = useCallback((chunk: number[]) => {
         const f = new FFT(8192);
         let input = padArray(chunk, f.size, 0);
-        let out = new Array(f.size);
+        let out = new Array(f.size / 2);
         f.realTransform(out, input);
         out = complexArrayToAbsolute(out);
         if (canvas.current != null && canvasCtx.current != null) {
             plotSpectrogram(canvas.current, canvasCtx.current, settings, out);
         }
-    }, []);
+    }, [settings]);
 
     useEffect(() => {
         if (recorder != null) {
