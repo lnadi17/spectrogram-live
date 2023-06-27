@@ -32,10 +32,10 @@ const windowFunctions : Array<WindowFunction> = [
 function App() {
     const initialSettingsState: SettingsState = {
         freqResolution: 0,
-        timeResolution: 1500,
+        timeResolution: 1000,
         timeSamplesOverlap: 100,
         sampleRate: 8000,
-        minTimeResolution: 1500,
+        minTimeResolution: 200,
         maxTimeResolution: 8000,
         maxFrequency: 3000,
         minDB: -20,

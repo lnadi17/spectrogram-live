@@ -9,7 +9,7 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
     const canvasHeight = canvas.height;
     canvasCtx.lineWidth = 1;
 
-    const widthMultiplier = 12;
+    const widthMultiplier = 1;
     const xBinWidth = Math.floor(settings.timeResolution / settings.minTimeResolution) * widthMultiplier;
     // const timeWidth = canvasWidth / xBinWidth * settings.timeResolution / settings.sampleRate;
 
