@@ -7,27 +7,7 @@ import Header from "./components/Header";
 import {Settings} from "./components/Settings";
 import {SettingsState} from "./types/SettingsState";
 import {WindowFunction} from "./types/WindowFunction";
-
-const windowFunctions : Array<WindowFunction> = [
-    {
-        name: "Rectangular",
-        values: (t: [number]) => {
-            return Array(t.length).fill(1) as [number];
-        }
-    },
-    {
-        name: "Hanning",
-        values: (t: [number]) => {
-            return Array(t.length).fill(1) as [number];
-        }
-    },
-    {
-        name: "Hamming",
-        values: (t: [number]) => {
-            return Array(t.length).fill(1) as [number];
-        }
-    }
-];
+import {windowFunctions} from "./scripts/WindowFunctions";
 
 function App() {
     const initialSettingsState: SettingsState = {
@@ -37,8 +17,8 @@ function App() {
         sampleRate: 8000,
         minTimeResolution: 200,
         maxTimeResolution: 8000,
-        minFrequency: 500,
-        maxFrequency: 1500,
+        minFrequency: 100,
+        maxFrequency: 3000,
         minDB: -20,
         sensitivity: null,
         window: windowFunctions[0],
@@ -56,7 +36,8 @@ function App() {
                     <Canvas settings={settingsState} recorder={recorder}/>
                 </GridItem>
                 <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5}>
-                    <Settings settings={settingsState} recorder={recorder} settingsSetter={setSettingsState} recorderSetter={setRecorder}/>
+                    <Settings settings={settingsState} recorder={recorder} settingsSetter={setSettingsState}
+                              recorderSetter={setRecorder}/>
                 </GridItem>
             </Grid>
         </Flex>

@@ -60,8 +60,8 @@ function Canvas({
     const processChunk = useCallback((chunk: number[]) => {
         const f = new DFT();
 
-        // Calculate DFT and crop it according to the max frequency
-        let dft = f.computeDFT(chunk);
+        // Calculate DFT of the windowed chunk and crop it according to the max frequency
+        let dft = f.computeDFT(settings.window.values(chunk));
         const minIndex = Math.floor(dft.length * settings.minFrequency / settings.sampleRate * 2);
         const maxIndex = Math.floor(dft.length * settings.maxFrequency / settings.sampleRate * 2);
         dft = dft.slice(minIndex, maxIndex);

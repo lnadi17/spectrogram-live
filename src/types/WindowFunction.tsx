@@ -1,4 +1,4 @@
 export interface WindowFunction {
     name: string,
-    values: (t: [number]) => [number]
+    values: (n: number[]) => number[]
 }
