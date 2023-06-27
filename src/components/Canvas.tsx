@@ -9,7 +9,7 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
     const canvasHeight = canvas.height;
     canvasCtx.lineWidth = 1;
 
-    const widthMultiplier = 2;
+    const widthMultiplier = 12;
     const xBinWidth = Math.floor(settings.timeResolution / settings.minTimeResolution) * widthMultiplier;
     // const timeWidth = canvasWidth / xBinWidth * settings.timeResolution / settings.sampleRate;
 
@@ -26,7 +26,7 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
         canvasCtx.strokeStyle = rgbToColorString(dbAmplitudeNorm, dbAmplitudeNorm, dbAmplitudeNorm);
         canvasCtx.beginPath();
         canvasCtx.moveTo(canvasWidth, y);
-        canvasCtx.lineTo(canvasWidth - xBinWidth - 5, y);
+        canvasCtx.lineTo(canvasWidth - xBinWidth - 5 * widthMultiplier, y);
         canvasCtx.stroke();
     }
 }
@@ -51,6 +51,8 @@ function Canvas({
     const callbackRef = useCallbackRef((node) => {
         if (node != null) {
             canvas.current = node;
+            canvas.current!.width = canvas.current!.width * 4;
+            canvas.current!.height = canvas.current!.height * 4;
             canvasCtx.current = node.getContext("2d", {willReadFrequently: true, opacity: false});
         }
     }, [])
