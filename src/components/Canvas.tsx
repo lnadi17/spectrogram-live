@@ -67,7 +67,6 @@ function Canvas({
 
     const callbackRef = useCallbackRef((node) => {
         if (node != null) {
-            console.log("Updating canvas and canvasCtx refs");
             canvas.current = node;
             canvasCtx.current = node.getContext("2d", {willReadFrequently: true, opacity: false});
         }
@@ -88,7 +87,6 @@ function Canvas({
         if (recorder != null) {
             console.log("Assigning audio process event");
             recorder.onaudioprocess = (event) => {
-                console.log("processing event");
                 const samples = Array.from(event.inputBuffer.getChannelData(0));
                 const data = [...remainder.current, ...samples];
 

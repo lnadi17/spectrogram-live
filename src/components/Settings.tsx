@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import GetStream from "../scripts/Microphone";
 import {RecordButton} from "./RecordButton";
 import {SettingsState} from "../types/SettingsState";
@@ -7,20 +7,22 @@ import {FrequencySlider} from "./FrequencySlider";
 import {TimeSamplesSlider} from "./TimeSamplesSlider";
 import {WindowSelector} from "./WindowSelector";
 import {Button} from "@chakra-ui/react";
+import {MediaStreamRecorder} from "recordrtc";
 
 let mus: any = [];
 
-function startRecording(setter: any, settings: SettingsState, settingsSetter: any) {
+function startRecording(recorderSetter: any, sourceSetter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
         .then((stream) => {
             const context = new AudioContext();
             const source = context.createMediaStreamSource(stream);
+            sourceSetter(source);
             // Yes, this feature is no longer recommended according to docs, but other solutions are too complex as of now.
             // Only the raw sound data is needed, the rest of the processing is still done in main thread.
             const recorder = context.createScriptProcessor(256, 1, 1);
             source.connect(recorder);
             recorder.connect(context.destination);
-            setter(recorder);
+            recorderSetter(recorder);
             settingsSetter({
                 ...settings,
                 sampleRate: context.sampleRate,
@@ -32,12 +34,13 @@ function startRecording(setter: any, settings: SettingsState, settingsSetter: an
         });
 }
 
-function stopRecording(recorder: MediaRecorder | null, setter: any) {
+function stopRecording(recorder: ScriptProcessorNode | null, source: MediaStreamAudioSourceNode | null, sourceSetter: any, recorderSetter: any) {
     if (recorder !== null) {
-        recorder.stream.getTracks()[0].stop();
-        recorder.stop();
+        recorder.disconnect();
+        source?.mediaStream.getTracks()[0].stop();
+        sourceSetter(null);
     }
-    setter(null);
+    recorderSetter(null);
 }
 
 function updateWindowFunction(windowName: string, settings: SettingsState, settingsSetter: any) {
@@ -74,11 +77,13 @@ export function Settings({
                              settingsSetter,
                              recorder,
                              recorderSetter,
-                         }: { settings: SettingsState, settingsSetter: any, recorder: MediaRecorder | null, recorderSetter: any }) {
+                         }: { settings: SettingsState, settingsSetter: any, recorder: ScriptProcessorNode | null, recorderSetter: any }) {
+    const [stream, setStream] = useState<MediaStreamAudioSourceNode | null>(null);
+
     return <>
         <RecordButton isRecording={recorder !== null}
-                      startCallback={() => startRecording(recorderSetter, settings, settingsSetter)}
-                      stopCallback={() => stopRecording(recorder, recorderSetter)}/>
+                      startCallback={() => startRecording(recorderSetter, setStream, settings, settingsSetter)}
+                      stopCallback={() => stopRecording(recorder, stream, setStream, recorderSetter)}/>
         <FrequencySlider freqResolution={settings.freqResolution} min={settings.sampleRate / settings.maxTimeResolution}
                          max={settings.sampleRate / settings.minTimeResolution}
                          changeHandler={(v: number) => updateSliderValues(null, v, null, settings, settingsSetter)}/>
