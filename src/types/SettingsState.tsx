@@ -8,6 +8,7 @@ export interface SettingsState {
     sampleRate: number,
     minTimeResolution: number,
     maxTimeResolution: number,
+    minFrequency: number,
     maxFrequency: number,
     minDB: number,
     sensitivity: number | null,

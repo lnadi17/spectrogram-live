@@ -62,8 +62,9 @@ function Canvas({
 
         // Calculate DFT and crop it according to the max frequency
         let dft = f.computeDFT(chunk);
+        const minIndex = Math.floor(dft.length * settings.minFrequency / settings.sampleRate * 2);
         const maxIndex = Math.floor(dft.length * settings.maxFrequency / settings.sampleRate * 2);
-        dft = dft.slice(0, maxIndex);
+        dft = dft.slice(minIndex, maxIndex);
 
 
         // Compute the highest value in the past 5 seconds for amplitude scaling
