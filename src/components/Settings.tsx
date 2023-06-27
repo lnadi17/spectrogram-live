@@ -94,9 +94,6 @@ export function Settings({
                            changeHandler={(v: number) => updateSliderValues(null, null, v, settings, settingsSetter)}/>
         <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}
                         handleChange={(value) => updateWindowFunction(value, settings, settingsSetter)}/>
-        <Button as="a" id="asd" onClick={() => {
-            exportToCsv('musika', mus);
-        }}>End Stream</Button>
     </>;
 }
 function exportToCsv(filename: any, rows: any) {
