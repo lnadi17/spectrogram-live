@@ -1,12 +1,7 @@
 import {Box, Button, Text, useCallbackRef} from "@chakra-ui/react";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {SettingsState} from "../types/SettingsState";
-
-const FFT = require('fft.js');
-
-function padArray(array: number[], length: number, fill: number) {
-    return length > array.length ? array.concat(Array(length - array.length).fill(fill)) : array;
-}
+import {DFT} from "../scripts/DFT";
 
 function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState, fft: number[]) {
     const fftSize = fft.length;
@@ -16,8 +11,7 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
 
     const widthMultiplier = 2;
     const xBinWidth = Math.floor(settings.timeResolution / settings.minTimeResolution) * widthMultiplier;
-    const timeWidth = canvasWidth / xBinWidth * settings.timeResolution / settings.sampleRate;
-    console.log(timeWidth);
+    // const timeWidth = canvasWidth / xBinWidth * settings.timeResolution / settings.sampleRate;
 
     // Copy current image to the left
     let imgData = canvasCtx.getImageData(xBinWidth, 0, canvasWidth - xBinWidth, canvasHeight);
@@ -42,24 +36,10 @@ function rgbToColorString(red: number, green: number, blue: number) {
     return `rgb(${clampedRed}, ${clampedGreen}, ${clampedBlue})`;
 }
 
-function complexArrayToAbsolute(complexArray: number[]) {
-    const absoluteArray = [];
-
-    for (let i = 0; i < complexArray.length; i += 2) {
-        const real = complexArray[i];
-        const imaginary = complexArray[i + 1];
-        const absoluteValue = Math.sqrt(real * real + imaginary * imaginary);
-        absoluteArray.push(absoluteValue);
-    }
-
-    return absoluteArray;
-}
-
 function Canvas({
                     settings,
                     recorder,
                 }: { settings: SettingsState, recorder: ScriptProcessorNode | null }) {
-    // console.log("Rendering Canvas");
     const remainder = useRef(Array<number>());
     const canvas = useRef<HTMLCanvasElement | null>(null);
     const canvasCtx = useRef<CanvasRenderingContext2D | null>(null);
@@ -72,11 +52,8 @@ function Canvas({
     }, [])
 
     const processChunk = useCallback((chunk: number[]) => {
-        const f = new FFT(8192);
-        let input = padArray(chunk, f.size, 0);
-        let out = new Array(f.size / 2);
-        f.realTransform(out, input);
-        out = complexArrayToAbsolute(out);
+        const f = new DFT();
+        const out = [...f.computeDFT(chunk)];
         if (canvas.current != null && canvasCtx.current != null) {
             requestAnimationFrame(() => plotSpectrogram(canvas.current!, canvasCtx.current!, settings, out))
         }
