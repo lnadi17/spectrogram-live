@@ -8,9 +8,10 @@ export class DFT {
 
         // Perform FFT computation
         const fftResult = this.fft(paddedSignal);
+        const fftSize = fftResult.length / 2;
 
         // Calculate the magnitudes of the complex values
-        for (let i = 0; i < N; i++) {
+        for (let i = 0; i < fftSize; i++) {
             const real = fftResult[i].re;
             const imag = fftResult[i].im;
             const magnitude = Math.sqrt(real * real + imag * imag);

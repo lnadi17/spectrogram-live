@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import {SettingsState} from "../types/SettingsState";
 import {DFT} from "../scripts/DFT";
 
-function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState, fft: number[]) {
+function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState, fft: number[], maxAmplitude: number) {
     const fftSize = fft.length;
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
@@ -20,7 +20,7 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
     for (let y = 0; y <= canvasHeight; y++) {
         const normalizedHeight = (canvasHeight - y) / canvasHeight;
         const fftIndex = Math.floor(fftSize * normalizedHeight);
-        const amplitude = fft[fftIndex];
+        const amplitude = fft[fftIndex] / maxAmplitude;
         canvasCtx.strokeStyle = rgbToColorString(amplitude, amplitude, amplitude);
         canvasCtx.beginPath();
         canvasCtx.moveTo(canvasWidth, y);
@@ -41,6 +41,8 @@ function Canvas({
                     recorder,
                 }: { settings: SettingsState, recorder: ScriptProcessorNode | null }) {
     const remainder = useRef(Array<number>());
+    const maxAmplitudes = useRef(Array<number>());
+    const chunkIndex = useRef<number>(0);
     const canvas = useRef<HTMLCanvasElement | null>(null);
     const canvasCtx = useRef<CanvasRenderingContext2D | null>(null);
 
@@ -53,9 +55,22 @@ function Canvas({
 
     const processChunk = useCallback((chunk: number[]) => {
         const f = new DFT();
-        const out = [...f.computeDFT(chunk)];
+
+        // Calculate DFT and crop it according to the max frequency
+        let dft = f.computeDFT(chunk);
+        const maxIndex = Math.floor(dft.length * settings.maxFrequency / settings.sampleRate * 2);
+        dft = dft.slice(0, maxIndex);
+
+
+        // Compute the highest value in the past 5 seconds for amplitude scaling
+        maxAmplitudes.current[chunkIndex.current] = Math.max(...dft);
+        const chunksInFiveSeconds = Math.floor(settings.sampleRate / settings.timeResolution) * 5;
+        chunkIndex.current = (chunkIndex.current + 1) % chunksInFiveSeconds;
+        const currentMax = Math.max(...maxAmplitudes.current);
+
+
         if (canvas.current != null && canvasCtx.current != null) {
-            requestAnimationFrame(() => plotSpectrogram(canvas.current!, canvasCtx.current!, settings, out))
+            requestAnimationFrame(() => plotSpectrogram(canvas.current!, canvasCtx.current!, settings, dft, currentMax))
         }
     }, [settings]);
 
@@ -77,7 +92,7 @@ function Canvas({
                     }
 
                     // Store any remaining data to be used next time
-                    remainder.current = data.slice(numFullChunks * settings.timeResolution); //
+                    remainder.current = data.slice(numFullChunks * settings.timeResolution);
                 }
             }
         }

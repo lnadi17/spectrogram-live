@@ -8,6 +8,8 @@ export interface SettingsState {
     sampleRate: number,
     minTimeResolution: number,
     maxTimeResolution: number,
+    maxFrequency: number,
+    sensitivity: number | null,
     window: WindowFunction,
     windowFunctions: Array<WindowFunction>
 }
