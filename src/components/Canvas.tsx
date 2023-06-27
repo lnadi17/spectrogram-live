@@ -20,8 +20,10 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
     for (let y = 0; y <= canvasHeight; y++) {
         const normalizedHeight = (canvasHeight - y) / canvasHeight;
         const fftIndex = Math.floor(fftSize * normalizedHeight);
-        const amplitude = fft[fftIndex] / maxAmplitude;
-        canvasCtx.strokeStyle = rgbToColorString(amplitude, amplitude, amplitude);
+        let linearAmplitude = fft[fftIndex] / maxAmplitude;
+        let dbAmplitude = 10 * Math.log10(linearAmplitude);
+        let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
+        canvasCtx.strokeStyle = rgbToColorString(dbAmplitudeNorm, dbAmplitudeNorm, dbAmplitudeNorm);
         canvasCtx.beginPath();
         canvasCtx.moveTo(canvasWidth, y);
         canvasCtx.lineTo(canvasWidth - xBinWidth - 5, y);

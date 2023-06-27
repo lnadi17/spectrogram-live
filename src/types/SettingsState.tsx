@@ -9,6 +9,7 @@ export interface SettingsState {
     minTimeResolution: number,
     maxTimeResolution: number,
     maxFrequency: number,
+    minDB: number,
     sensitivity: number | null,
     window: WindowFunction,
     windowFunctions: Array<WindowFunction>

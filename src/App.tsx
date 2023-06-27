@@ -37,7 +37,8 @@ function App() {
         sampleRate: 8000,
         minTimeResolution: 1500,
         maxTimeResolution: 8000,
-        maxFrequency: 2000,
+        maxFrequency: 3000,
+        minDB: -40,
         sensitivity: null,
         window: windowFunctions[0],
         windowFunctions: windowFunctions
