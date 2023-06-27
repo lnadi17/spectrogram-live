@@ -87,11 +87,14 @@ function Canvas({
                 if (data.length < settings.timeResolution) {
                     remainder.current = data;
                 } else {
-                    // Calculate how many full chunks can be taken from data
-                    let numFullChunks = Math.floor(data.length / settings.timeResolution);
+                    // Calculate how many full chunks can be taken from data with overlap
+                    const overlapSize = settings.timeSamplesOverlap;
+                    let numFullChunks = Math.floor((data.length - overlapSize) / (settings.timeResolution - overlapSize));
 
                     for (let i = 0; i < numFullChunks; i++) {
-                        let chunk = data.slice(i * settings.timeResolution, (i + 1) * settings.timeResolution);
+                        let chunkStartIndex = i * (settings.timeResolution - overlapSize);
+                        let chunkEndIndex = chunkStartIndex + settings.timeResolution;
+                        let chunk = data.slice(chunkStartIndex, chunkEndIndex);
                         processChunk(chunk);
                     }
 
