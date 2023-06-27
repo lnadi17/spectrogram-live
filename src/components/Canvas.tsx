@@ -12,12 +12,12 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
     const fftSize = fft.length;
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
-
     canvasCtx.lineWidth = 1;
 
-    const timeWidth = 5; // Canvas should have width of past 5 seconds
-    const oneSecondLength = canvasWidth / timeWidth; // Length of 1-second window in pixels
-    const xBinWidth = oneSecondLength * (settings.timeResolution / settings.sampleRate); // Width of current time frame in pixels
+    const widthMultiplier = 2;
+    const xBinWidth = Math.floor(settings.timeResolution / settings.minTimeResolution) * widthMultiplier;
+    const timeWidth = canvasWidth / xBinWidth * settings.timeResolution / settings.sampleRate;
+    console.log(timeWidth);
 
     // Copy current image to the left
     let imgData = canvasCtx.getImageData(xBinWidth, 0, canvasWidth - xBinWidth, canvasHeight);
@@ -55,7 +55,6 @@ function complexArrayToAbsolute(complexArray: number[]) {
     return absoluteArray;
 }
 
-
 function Canvas({
                     settings,
                     recorder,
@@ -85,7 +84,6 @@ function Canvas({
 
     useEffect(() => {
         if (recorder != null) {
-            console.log("Assigning audio process event");
             recorder.onaudioprocess = (event) => {
                 const samples = Array.from(event.inputBuffer.getChannelData(0));
                 const data = [...remainder.current, ...samples];
