@@ -1,5 +1,5 @@
-import {Box, Button, Text, useCallbackRef} from "@chakra-ui/react";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import {Box, useCallbackRef} from "@chakra-ui/react";
+import React, {useCallback, useEffect, useRef} from "react";
 import {SettingsState} from "../types/SettingsState";
 import {DFT} from "../scripts/DFT";
 
@@ -19,7 +19,12 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
 
     for (let y = 0; y <= canvasHeight; y++) {
         const normalizedHeight = (canvasHeight - y) / canvasHeight;
-        const fftIndex = Math.floor(fftSize * normalizedHeight);
+        let fftIndex = 0;
+        if (settings.freqScale === 'linear') {
+            fftIndex = Math.floor(fftSize * normalizedHeight);
+        } else if (settings.freqScale === 'mel') {
+            fftIndex = Math.floor(getMelNormalized(normalizedHeight, settings.minFrequency, settings.maxFrequency) * fftSize);
+        }
         let linearAmplitude = fft[fftIndex] / maxAmplitude;
         let dbAmplitude = 10 * Math.log10(linearAmplitude);
         let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
@@ -29,6 +34,15 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
         canvasCtx.lineTo(canvasWidth - xBinWidth - 5 * widthMultiplier, y);
         canvasCtx.stroke();
     }
+}
+
+// Takes normalized value between 0 and 1, min and max frequency, and returns value between 0 and 1 but on mel scale
+function getMelNormalized(normValue: number, minFreq: number, maxFreq: number) {
+    const melMin = 2595 * Math.log10(1 + minFreq / 700);
+    const melMax = 2595 * Math.log10(1 + maxFreq / 700);
+    const mel = melMin + normValue * (melMax - melMin);
+    const hz = 700 * (Math.pow(10, mel / 2595) - 1);
+    return (hz - minFreq) / (maxFreq - minFreq);
 }
 
 function rgbToColorString(red: number, green: number, blue: number) {
@@ -65,7 +79,6 @@ function Canvas({
         const minIndex = Math.floor(dft.length * settings.minFrequency / settings.sampleRate * 2);
         const maxIndex = Math.floor(dft.length * settings.maxFrequency / settings.sampleRate * 2);
         dft = dft.slice(minIndex, maxIndex);
-
 
         // Compute the highest value in the past 5 seconds for amplitude scaling
         maxAmplitudes.current[chunkIndex.current] = Math.max(...dft);

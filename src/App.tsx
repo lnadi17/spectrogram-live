@@ -6,20 +6,20 @@ import Canvas from "./components/Canvas";
 import Header from "./components/Header";
 import {Settings} from "./components/Settings";
 import {SettingsState} from "./types/SettingsState";
-import {WindowFunction} from "./types/WindowFunction";
 import {windowFunctions} from "./scripts/WindowFunctions";
 
 function App() {
     const initialSettingsState: SettingsState = {
         freqResolution: 0,
-        timeResolution: 1000,
-        timeSamplesOverlap: 100,
+        timeResolution: 1500,
+        timeSamplesOverlap: 750,
         sampleRate: 8000,
         minTimeResolution: 200,
         maxTimeResolution: 8000,
-        minFrequency: 100,
-        maxFrequency: 3000,
+        minFrequency: 0,
+        maxFrequency: 10000,
         minDB: -20,
+        freqScale: 'mel',
         sensitivity: null,
         window: windowFunctions[0],
         windowFunctions: windowFunctions

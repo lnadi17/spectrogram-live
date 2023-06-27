@@ -12,6 +12,7 @@ export interface SettingsState {
     maxFrequency: number,
     minDB: number,
     sensitivity: number | null,
+    freqScale: 'mel' | 'linear',
     window: WindowFunction,
     windowFunctions: Array<WindowFunction>
 }
