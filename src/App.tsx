@@ -23,7 +23,6 @@ function App() {
         freqScale: 'mel',
         cmapChoice: 'viridis',
         cmapChoices: ['Blues_r', 'cool_r', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r'],
-        sensitivity: null,
         window: windowFunctions[0],
         windowFunctions: windowFunctions
     };

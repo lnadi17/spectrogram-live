@@ -11,7 +11,6 @@ export interface SettingsState {
     minFrequency: number,
     maxFrequency: number,
     minDB: number,
-    sensitivity: number | null,
     freqScale: 'mel' | 'linear',
     intensityScale: 'linear' | 'dB',
     cmapChoice: string,
