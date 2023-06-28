@@ -7,7 +7,6 @@ import Header from "./components/Header";
 import {Settings} from "./components/Settings";
 import {SettingsState} from "./types/SettingsState";
 import {windowFunctions} from "./scripts/WindowFunctions";
-import {WindowFunction} from "./types/WindowFunction";
 
 function App() {
     const initialSettingsState : SettingsState = {
@@ -20,7 +19,7 @@ function App() {
         minFrequency: 0,
         maxFrequency: 10000,
         minDB: -40,
-        intensityScale: 'linear',
+        intensityScale: 'dB',
         freqScale: 'mel',
         cmapChoice: 'viridis',
         cmapChoices: ['Blues_r', 'cool_r', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r'],

@@ -29,7 +29,8 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
         }
 
         // Sort out intensity scale and coloring
-        let linearAmplitude = fft[fftIndex] / Math.max(maxAmplitude, Number.EPSILON);
+        let linearAmplitude = maxAmplitude > 0 ? (fft[fftIndex] / maxAmplitude) : 0;
+        linearAmplitude = Math.max(0, Math.min(1, linearAmplitude));
         if (settings.intensityScale == 'linear') {
             canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(linearAmplitude, settings.cmapChoice, false) + ')';
         } else {
@@ -85,14 +86,22 @@ function Canvas({
         dft = dft.slice(minIndex, maxIndex);
 
         // Compute the highest value in the past 5 seconds for amplitude scaling
-        maxAmplitudes.current[chunkIndex.current] = Math.max(...dft);
-        const chunksInFiveSeconds = Math.floor(settings.sampleRate / settings.timeResolution) * 5;
-        chunkIndex.current = (chunkIndex.current + 1) % chunksInFiveSeconds;
-        const currentMax = Math.max(...maxAmplitudes.current);
+        const smoothingFactor = 0.2;
+        const decayFactor = 0.9;
+
+        const maxInCurrentChunk = Math.max(...dft);
+        const currentMax = maxAmplitudes.current.length ? Math.max(...maxAmplitudes.current) : 0;
+        const emaMax = smoothingFactor * currentMax + (1 - smoothingFactor) * maxInCurrentChunk;
+        const decayedMax = currentMax * decayFactor;
+        const updatedMax = Math.max(emaMax, decayedMax);
+        maxAmplitudes.current[chunkIndex.current] = updatedMax;
+
+        const chunksInTwoSeconds = Math.floor(settings.sampleRate / settings.timeResolution) * 2;
+        chunkIndex.current = (chunkIndex.current + 1) % chunksInTwoSeconds;
 
 
         if (canvas.current != null && canvasCtx.current != null) {
-            requestAnimationFrame(() => plotSpectrogram(canvas.current!, canvasCtx.current!, settings, dft, currentMax))
+            requestAnimationFrame(() => plotSpectrogram(canvas.current!, canvasCtx.current!, settings, dft, updatedMax))
         }
     }, [settings]);
 
