@@ -16,10 +16,10 @@ export function FrequencyRangeSlider({
     function formatFrequency(frequency: number) {
         if (frequency >= 1000) {
             // Format frequency in kHz
-            return (frequency / 1000).toFixed(1) + 'kHz';
+            return (frequency / 1000).toFixed(1) + ' kHz';
         } else {
             // Format frequency in Hz
-            return frequency + 'Hz';
+            return frequency + ' Hz';
         }
     }
 
@@ -30,7 +30,7 @@ export function FrequencyRangeSlider({
                      aria-label={['min', 'max']}
                      onChange={changeHandler}>
             <RangeSliderTrack bg='purple.100'>
-                <RangeSliderFilledTrack bg='purple.500'/>
+                <RangeSliderFilledTrack bg='purple.300'/>
             </RangeSliderTrack>
             <RangeSliderThumb boxSize={3} index={0}/>
             <RangeSliderThumb boxSize={3} index={1}/>

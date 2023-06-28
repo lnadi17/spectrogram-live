@@ -13,7 +13,7 @@ function App() {
         freqResolution: 0,
         timeResolution: 1500,
         timeSamplesOverlap: 750,
-        sampleRate: 8000,
+        sampleRate: 48000,
         minTimeResolution: 200,
         maxTimeResolution: 8000,
         minFrequency: 0,
