@@ -13,6 +13,7 @@ export interface SettingsState {
     minDB: number,
     sensitivity: number | null,
     freqScale: 'mel' | 'linear',
+    intensityScale: 'linear' | 'dB',
     cmapChoice: string,
     cmapChoices: Array<string>,
     window: WindowFunction,

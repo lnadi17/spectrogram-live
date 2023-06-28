@@ -20,6 +20,7 @@ function App() {
         minFrequency: 0,
         maxFrequency: 10000,
         minDB: -40,
+        intensityScale: 'linear',
         freqScale: 'mel',
         cmapChoice: 'viridis',
         cmapChoices: ['Blues_r', 'cool_r', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r'],

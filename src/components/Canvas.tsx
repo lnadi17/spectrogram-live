@@ -12,7 +12,6 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
 
     const widthMultiplier = 1;
     const xBinWidth = Math.floor(settings.timeResolution / settings.minTimeResolution) * widthMultiplier;
-    // const timeWidth = canvasWidth / xBinWidth * settings.timeResolution / settings.sampleRate;
 
     // Copy current image to the left
     let imgData = canvasCtx.getImageData(xBinWidth, 0, canvasWidth - xBinWidth, canvasHeight);
@@ -20,17 +19,27 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
 
     for (let y = 0; y <= canvasHeight; y++) {
         const normalizedHeight = (canvasHeight - y) / canvasHeight;
+
+        // Sort out frequency scale
         let fftIndex = 0;
         if (settings.freqScale === 'linear') {
             fftIndex = Math.floor(maxFftIndex * normalizedHeight);
         } else if (settings.freqScale === 'mel') {
             fftIndex = Math.floor(getMelNormalized(normalizedHeight, settings.minFrequency, settings.maxFrequency) * maxFftIndex);
         }
-        let linearAmplitude = fft[fftIndex] / maxAmplitude;
-        const dbAmplitude = (linearAmplitude > 0) ? 10 * Math.log10(linearAmplitude) : 0;
-        let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
-        dbAmplitudeNorm = Math.max(0, Math.min(1, dbAmplitudeNorm));
-        canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(dbAmplitudeNorm, settings.cmapChoice, false) + ')';
+
+        // Sort out intensity scale and coloring
+        let linearAmplitude = fft[fftIndex] / Math.max(maxAmplitude, Number.EPSILON);
+        if (settings.intensityScale == 'linear') {
+            canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(linearAmplitude, settings.cmapChoice, false) + ')';
+        } else {
+            const dbAmplitude = (linearAmplitude > 0) ? 10 * Math.log10(linearAmplitude) : 0;
+            let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
+            dbAmplitudeNorm = Math.max(0, Math.min(1, dbAmplitudeNorm));
+            canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(dbAmplitudeNorm, settings.cmapChoice, false) + ')';
+        }
+
+        // Actually draw the bin
         canvasCtx.beginPath();
         canvasCtx.moveTo(canvasWidth, y);
         canvasCtx.lineTo(canvasWidth - xBinWidth - 5 * widthMultiplier, y);
