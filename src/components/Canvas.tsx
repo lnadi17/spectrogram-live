@@ -131,7 +131,7 @@ function Canvas({
                 }
             }
         }
-    }, [recorder, settings]);
+    }, [recorder, settings, processChunk]);
 
     return (
         <Box height={"100%"}>

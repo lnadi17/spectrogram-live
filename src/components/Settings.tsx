@@ -10,6 +10,7 @@ import {ColormapSelector} from "./ColormapSelector";
 import {IntensityScaleSelector} from "./IntensityScaleSelector";
 import {FrequencyScaleSelector} from "./FrequencyScaleSelector";
 import {Box} from "@chakra-ui/react";
+import {FrequencyRangeSlider} from "./FrequencyRangeSlider";
 
 function startRecording(recorderSetter: any, sourceSetter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
@@ -92,6 +93,11 @@ export function Settings({
                     changeHandler={(v: number) => updateSliderValues(v, null, null, settings, settingsSetter)}/>
         <TimeSamplesSlider timeSamples={settings.timeSamplesOverlap} max={settings.timeResolution / 2}
                            changeHandler={(v: number) => updateSliderValues(null, null, v, settings, settingsSetter)}/>
+        <FrequencyRangeSlider currMin={settings.minFrequency} currMax={settings.maxFrequency} min={0}
+                              max={settings.sampleRate / 2}
+                              changeHandler={(range: [number, number]) => {
+                                  settingsSetter({...settings, minFrequency: range[0], maxFrequency: range[1]})
+                              }}/>
         <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}
                         handleChange={(value) => updateWindowFunction(value, settings, settingsSetter)}/>
         <ColormapSelector colormapChoices={settings.cmapChoices} currentColor={settings.cmapChoice}

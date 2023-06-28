@@ -5,7 +5,6 @@ import {
     Text
 } from "@chakra-ui/react";
 import React from "react";
-import {WindowFunction} from "../types/WindowFunction";
 
 export function FrequencyScaleSelector({
                                    currentChoice,
