@@ -22,7 +22,7 @@ function App() {
         intensityScale: 'dB',
         freqScale: 'mel',
         cmapChoice: 'viridis',
-        cmapChoices: ['Blues_r', 'cool_r', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r'],
+        cmapChoices: ['Blues_r', 'bone', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r', 'hot', 'seismic', 'summer'],
         window: windowFunctions[0],
         windowFunctions: windowFunctions
     };

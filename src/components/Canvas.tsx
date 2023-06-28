@@ -31,13 +31,14 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
         // Sort out intensity scale and coloring
         let linearAmplitude = maxAmplitude > 0 ? (fft[fftIndex] / maxAmplitude) : 0;
         linearAmplitude = Math.max(0, Math.min(1, linearAmplitude));
+        const [color, reverse] = settings.cmapChoice.split('_');
         if (settings.intensityScale == 'linear') {
-            canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(linearAmplitude, settings.cmapChoice, false) + ')';
+            canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(linearAmplitude, color, reverse !== undefined) + ')';
         } else {
             const dbAmplitude = (linearAmplitude > 0) ? 10 * Math.log10(linearAmplitude) : 0;
             let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
             dbAmplitudeNorm = Math.max(0, Math.min(1, dbAmplitudeNorm));
-            canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(dbAmplitudeNorm, settings.cmapChoice, false) + ')';
+            canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(dbAmplitudeNorm, color, reverse !== undefined) + ')';
         }
 
         // Actually draw the bin
