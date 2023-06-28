@@ -21,7 +21,7 @@ function startRecording(recorderSetter: any, sourceSetter: any, settings: Settin
             sourceSetter(source);
             // Yes, this feature is no longer recommended according to docs, but other solutions are too complex as of now.
             // Only the raw sound data is needed, the rest of the processing is still done in main thread.
-            const recorder = context.createScriptProcessor(256, 1, 1);
+            const recorder = context.createScriptProcessor(1024, 1, 1);
             source.connect(recorder);
             recorder.connect(context.destination);
             recorderSetter(recorder);
