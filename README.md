@@ -20,3 +20,15 @@ You can visit the demo website at [https://lnadi17.github.io/spectrogram-live](h
 - Along with the linear frequency scaling, option to have Mel scale which is more understandable for humans
 - Spectrogram generation using FFT and windowing functions
 - Responsive design for optimal viewing on various devices
+
+## Installation
+
+This project was created with `create-react-app` script. If you want to run the development environment on your machine, after cloning the repository, open terminal in that folder and run:
+```sh
+npm install
+```
+After which you can run local server with:
+```sh
+npm run start
+```
+Otherwise, you can always visit the demo website directly.
