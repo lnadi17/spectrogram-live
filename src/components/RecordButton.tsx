@@ -6,8 +6,8 @@ export function RecordButton({
                                  startCallback,
                                  stopCallback
                              }: { isRecording: boolean, startCallback: any, stopCallback: any }) {
-    return <Button colorScheme="teal" variant="outline" onClick={isRecording ? stopCallback : startCallback}>
-        {isRecording ? "Stop Recording" : "Start Recording"}
+    return <Button colorScheme="teal" variant="outline" onClick={isRecording ? stopCallback : startCallback} mx={2}>
+        {isRecording ? "Stop Recording" : "Low Latency"}
     </Button>;
 }
 

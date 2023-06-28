@@ -9,11 +9,12 @@ import {WindowSelector} from "./WindowSelector";
 import {ColormapSelector} from "./ColormapSelector";
 import {IntensityScaleSelector} from "./IntensityScaleSelector";
 import {FrequencyScaleSelector} from "./FrequencyScaleSelector";
-import {Box} from "@chakra-ui/react";
+import {Box, Text} from "@chakra-ui/react";
 import {FrequencyRangeSlider} from "./FrequencyRangeSlider";
 import {CutoffIntensitySlider} from "./CutoffIntensitySlider";
+import {PerformantRecordButton} from "./PerformantRecordButton";
 
-function startRecording(recorderSetter: any, sourceSetter: any, settings: SettingsState, settingsSetter: any) {
+function startRecording(bufferSize: number, recorderSetter: any, sourceSetter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
         .then((stream) => {
             const context = new AudioContext();
@@ -21,7 +22,7 @@ function startRecording(recorderSetter: any, sourceSetter: any, settings: Settin
             sourceSetter(source);
             // Yes, this feature is no longer recommended according to docs, but other solutions are too complex as of now.
             // Only the raw sound data is needed, the rest of the processing is still done in main thread.
-            const recorder = context.createScriptProcessor(1024, 1, 1);
+            const recorder = context.createScriptProcessor(bufferSize, 1, 1);
             source.connect(recorder);
             recorder.connect(context.destination);
             recorderSetter(recorder);
@@ -83,9 +84,12 @@ export function Settings({
     const [stream, setStream] = useState<MediaStreamAudioSourceNode | null>(null);
 
     return <Box>
+        <Text>Recording Type</Text>
         <RecordButton isRecording={recorder !== null}
-                      startCallback={() => startRecording(recorderSetter, setStream, settings, settingsSetter)}
+                      startCallback={() => startRecording(512, recorderSetter, setStream, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, stream, setStream, recorderSetter)}/>
+        <PerformantRecordButton isRecording={recorder !== null}
+                                startCallback={() => startRecording(8192 * 2, recorderSetter, setStream, settings, settingsSetter)}/>
         <FrequencySlider freqResolution={settings.freqResolution} min={settings.sampleRate / settings.maxTimeResolution}
                          max={settings.sampleRate / settings.minTimeResolution}
                          changeHandler={(v: number) => updateSliderValues(null, v, null, settings, settingsSetter)}/>
