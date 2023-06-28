@@ -23,12 +23,13 @@ export function FrequencyRangeSlider({
         }
     }
 
+    console.log(min, max);
     return (<>
         <Text>Frequency Range</Text>
-        <RangeSlider defaultValue={[min, max]} min={min} max={max} step={100} w={"50%"} display={"inline-block"}
+        <RangeSlider defaultValue={[currMin, currMax]} min={min} max={max} step={100} w={"50%"} display={"inline-block"}
+                     aria-label={['min', 'max']}
                      onChange={changeHandler}>
             <RangeSliderTrack bg='purple.100'>
-                <Box position='relative' right={50}/>
                 <RangeSliderFilledTrack bg='purple.500'/>
             </RangeSliderTrack>
             <RangeSliderThumb boxSize={3} index={0}/>

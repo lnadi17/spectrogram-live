@@ -21,9 +21,9 @@ function App() {
         minDB: -40,
         intensityScale: 'dB',
         freqScale: 'Mel',
-        cmapChoice: 'viridis',
+        cmapChoice: 'cividis',
         cmapChoices: ['Blues_r', 'bone', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r', 'hot', 'seismic', 'summer'],
-        window: windowFunctions[0],
+        window: windowFunctions[4],
         windowFunctions: windowFunctions
     };
 
