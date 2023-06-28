@@ -7,7 +7,8 @@ function Header() {
 
     return (<Box
         as="aside"
-        bg={"gray.500"}>
+        bg={"gray.500"}
+        h={"15vh"}>
         <Heading m={2} color={"blue.50"}>Spectrogram Live</Heading>
         {isSmallScreen ? null :
             <Text ml={3} color={"blue.100"} fontSize={fs}>A web application developed by Luka Nadiradze during

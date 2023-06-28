@@ -6,7 +6,7 @@ export function PerformantRecordButton({
                                            startCallback,
                                        }: { isRecording: boolean, startCallback: any }) {
     if (!isRecording) {
-        return <Button colorScheme="teal" variant="outline" onClick={startCallback}>
+        return <Button colorScheme="teal" variant="outline" onClick={startCallback} ml={2}>
             High Quality
         </Button>
     } else {

@@ -18,7 +18,6 @@ export function FrequencyRangeSlider({
         }
     }
 
-    console.log(min, max);
     return (<>
         <Text>Frequency Range</Text>
         <RangeSlider defaultValue={[currMin, currMax]} min={min} max={max} step={100} w={"50%"} display={"inline-block"}

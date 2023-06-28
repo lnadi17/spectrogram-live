@@ -38,7 +38,7 @@ function App() {
                     <Canvas settings={settingsState} recorder={recorder}/>
                 </GridItem>
                 <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5} overflowY={{base: "hidden", md: "scroll"}}
-                          maxH={{base: 'none', md: '80vh'}}>
+                          maxH={{base: 'none', md: '85vh'}}>
                     <Settings settings={settingsState} recorder={recorder} settingsSetter={setSettingsState}
                               recorderSetter={setRecorder}/>
                 </GridItem>
