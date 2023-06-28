@@ -7,9 +7,10 @@ import Header from "./components/Header";
 import {Settings} from "./components/Settings";
 import {SettingsState} from "./types/SettingsState";
 import {windowFunctions} from "./scripts/WindowFunctions";
+import {WindowFunction} from "./types/WindowFunction";
 
 function App() {
-    const initialSettingsState: SettingsState = {
+    const initialSettingsState : SettingsState = {
         freqResolution: 0,
         timeResolution: 1500,
         timeSamplesOverlap: 750,
@@ -18,8 +19,10 @@ function App() {
         maxTimeResolution: 8000,
         minFrequency: 0,
         maxFrequency: 10000,
-        minDB: -20,
+        minDB: -40,
         freqScale: 'mel',
+        cmapChoice: 'viridis',
+        cmapChoices: ['Blues_r', 'cool_r', 'coolwarm', 'cividis', 'plasma', 'viridis', 'Greys_r'],
         sensitivity: null,
         window: windowFunctions[0],
         windowFunctions: windowFunctions

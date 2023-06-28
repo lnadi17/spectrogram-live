@@ -2,9 +2,10 @@ import {Box, useCallbackRef} from "@chakra-ui/react";
 import React, {useCallback, useEffect, useRef} from "react";
 import {SettingsState} from "../types/SettingsState";
 import {DFT} from "../scripts/DFT";
+import {evaluate_cmap} from "../scripts/js-colormaps";
 
 function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingContext2D, settings: SettingsState, fft: number[], maxAmplitude: number) {
-    const fftSize = fft.length;
+    const maxFftIndex = fft.length - 1;
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
     canvasCtx.lineWidth = 1;
@@ -21,14 +22,15 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
         const normalizedHeight = (canvasHeight - y) / canvasHeight;
         let fftIndex = 0;
         if (settings.freqScale === 'linear') {
-            fftIndex = Math.floor(fftSize * normalizedHeight);
+            fftIndex = Math.floor(maxFftIndex * normalizedHeight);
         } else if (settings.freqScale === 'mel') {
-            fftIndex = Math.floor(getMelNormalized(normalizedHeight, settings.minFrequency, settings.maxFrequency) * fftSize);
+            fftIndex = Math.floor(getMelNormalized(normalizedHeight, settings.minFrequency, settings.maxFrequency) * maxFftIndex);
         }
         let linearAmplitude = fft[fftIndex] / maxAmplitude;
-        let dbAmplitude = 10 * Math.log10(linearAmplitude);
+        const dbAmplitude = (linearAmplitude > 0) ? 10 * Math.log10(linearAmplitude) : 0;
         let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
-        canvasCtx.strokeStyle = rgbToColorString(dbAmplitudeNorm, dbAmplitudeNorm, dbAmplitudeNorm);
+        dbAmplitudeNorm = Math.max(0, Math.min(1, dbAmplitudeNorm));
+        canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(dbAmplitudeNorm, settings.cmapChoice, false) + ')';
         canvasCtx.beginPath();
         canvasCtx.moveTo(canvasWidth, y);
         canvasCtx.lineTo(canvasWidth - xBinWidth - 5 * widthMultiplier, y);
@@ -43,13 +45,6 @@ function getMelNormalized(normValue: number, minFreq: number, maxFreq: number) {
     const mel = melMin + normValue * (melMax - melMin);
     const hz = 700 * (Math.pow(10, mel / 2595) - 1);
     return (hz - minFreq) / (maxFreq - minFreq);
-}
-
-function rgbToColorString(red: number, green: number, blue: number) {
-    const clampedRed = Math.round(red * 255);
-    const clampedGreen = Math.round(green * 255);
-    const clampedBlue = Math.round(blue * 255);
-    return `rgb(${clampedRed}, ${clampedGreen}, ${clampedBlue})`;
 }
 
 function Canvas({

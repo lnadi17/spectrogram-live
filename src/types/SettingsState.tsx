@@ -13,6 +13,8 @@ export interface SettingsState {
     minDB: number,
     sensitivity: number | null,
     freqScale: 'mel' | 'linear',
+    cmapChoice: string,
+    cmapChoices: Array<string>,
     window: WindowFunction,
     windowFunctions: Array<WindowFunction>
 }
