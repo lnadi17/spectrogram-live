@@ -84,7 +84,7 @@ export function Settings({
     const [stream, setStream] = useState<MediaStreamAudioSourceNode | null>(null);
 
     return <Box>
-        <Text>Recording Type</Text>
+        <Text>Start Recording</Text>
         <RecordButton isRecording={recorder !== null}
                       startCallback={() => startRecording(512, recorderSetter, setStream, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, stream, setStream, recorderSetter)}/>
