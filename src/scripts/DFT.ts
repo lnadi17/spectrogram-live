@@ -51,9 +51,10 @@ export class DFT {
     private padSignal(signal: number[]): number[] {
         const N = signal.length;
         const nextPowerOf2 = Math.pow(2, Math.ceil(Math.log2(N)));
+        const desiredPowerOf2 = Math.min(nextPowerOf2, 8192);
         const paddedSignal = [...signal];
 
-        for (let i = N; i < nextPowerOf2; i++) {
+        for (let i = N; i < desiredPowerOf2; i++) {
             paddedSignal.push(0);
         }
 
