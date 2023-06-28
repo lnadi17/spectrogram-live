@@ -89,7 +89,7 @@ export function Settings({
                       startCallback={() => startRecording(512, recorderSetter, setStream, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, stream, setStream, recorderSetter)}/>
         <PerformantRecordButton isRecording={recorder !== null}
-                                startCallback={() => startRecording(8192 * 2, recorderSetter, setStream, settings, settingsSetter)}/>
+                                startCallback={() => startRecording(8192, recorderSetter, setStream, settings, settingsSetter)}/>
         <FrequencySlider freqResolution={settings.freqResolution} min={settings.sampleRate / settings.maxTimeResolution}
                          max={settings.sampleRate / settings.minTimeResolution}
                          changeHandler={(v: number) => updateSliderValues(null, v, null, settings, settingsSetter)}/>
