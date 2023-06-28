@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 /*
 Add contents of data.js here:
