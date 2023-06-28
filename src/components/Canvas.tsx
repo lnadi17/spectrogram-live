@@ -22,9 +22,9 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
 
         // Sort out frequency scale
         let fftIndex = 0;
-        if (settings.freqScale === 'linear') {
+        if (settings.freqScale === 'Linear') {
             fftIndex = Math.floor(maxFftIndex * normalizedHeight);
-        } else if (settings.freqScale === 'mel') {
+        } else if (settings.freqScale === 'Mel') {
             fftIndex = Math.floor(getMelNormalized(normalizedHeight, settings.minFrequency, settings.maxFrequency) * maxFftIndex);
         }
 
@@ -32,9 +32,9 @@ function plotSpectrogram(canvas: HTMLCanvasElement, canvasCtx: CanvasRenderingCo
         let linearAmplitude = maxAmplitude > 0 ? (fft[fftIndex] / maxAmplitude) : 0;
         linearAmplitude = Math.max(0, Math.min(1, linearAmplitude));
         const [color, reverse] = settings.cmapChoice.split('_');
-        if (settings.intensityScale == 'linear') {
+        if (settings.intensityScale === 'Linear') {
             canvasCtx.strokeStyle = 'rgb(' + evaluate_cmap(linearAmplitude, color, reverse !== undefined) + ')';
-        } else {
+        } else if (settings.intensityScale === 'dB') {
             const dbAmplitude = (linearAmplitude > 0) ? 10 * Math.log10(linearAmplitude) : 0;
             let dbAmplitudeNorm = (dbAmplitude - settings.minDB) / (0 - settings.minDB);
             dbAmplitudeNorm = Math.max(0, Math.min(1, dbAmplitudeNorm));

@@ -7,6 +7,7 @@ import {FrequencySlider} from "./FrequencySlider";
 import {TimeSamplesSlider} from "./TimeSamplesSlider";
 import {WindowSelector} from "./WindowSelector";
 import {ColormapSelector} from "./ColormapSelector";
+import {IntensityScaleSelector} from "./IntensityScaleSelector";
 
 function startRecording(recorderSetter: any, sourceSetter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
@@ -92,6 +93,8 @@ export function Settings({
         <WindowSelector windowChoices={settings.windowFunctions} currentWindow={settings.window}
                         handleChange={(value) => updateWindowFunction(value, settings, settingsSetter)}/>
         <ColormapSelector colormapChoices={settings.cmapChoices} currentColor={settings.cmapChoice}
-                        handleChange={(value) => settingsSetter({...settings, cmapChoice: value})}/>
+                          handleChange={(value) => settingsSetter({...settings, cmapChoice: value})}/>
+        <IntensityScaleSelector currentChoice={settings.intensityScale}
+                                handleChange={(value) => settingsSetter({...settings, intensityScale: value})}/>
     </>;
 }
