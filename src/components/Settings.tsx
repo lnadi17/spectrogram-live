@@ -8,6 +8,8 @@ import {TimeSamplesSlider} from "./TimeSamplesSlider";
 import {WindowSelector} from "./WindowSelector";
 import {ColormapSelector} from "./ColormapSelector";
 import {IntensityScaleSelector} from "./IntensityScaleSelector";
+import {FrequencyScaleSelector} from "./FrequencyScaleSelector";
+import {Box} from "@chakra-ui/react";
 
 function startRecording(recorderSetter: any, sourceSetter: any, settings: SettingsState, settingsSetter: any) {
     GetStream()
@@ -78,7 +80,7 @@ export function Settings({
                          }: { settings: SettingsState, settingsSetter: any, recorder: ScriptProcessorNode | null, recorderSetter: any }) {
     const [stream, setStream] = useState<MediaStreamAudioSourceNode | null>(null);
 
-    return <>
+    return <Box>
         <RecordButton isRecording={recorder !== null}
                       startCallback={() => startRecording(recorderSetter, setStream, settings, settingsSetter)}
                       stopCallback={() => stopRecording(recorder, stream, setStream, recorderSetter)}/>
@@ -96,5 +98,7 @@ export function Settings({
                           handleChange={(value) => settingsSetter({...settings, cmapChoice: value})}/>
         <IntensityScaleSelector currentChoice={settings.intensityScale}
                                 handleChange={(value) => settingsSetter({...settings, intensityScale: value})}/>
-    </>;
+        <FrequencyScaleSelector currentChoice={settings.freqScale}
+                                handleChange={(value) => settingsSetter({...settings, freqScale: value})}/>
+    </Box>;
 }

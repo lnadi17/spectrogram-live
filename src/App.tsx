@@ -9,7 +9,7 @@ import {SettingsState} from "./types/SettingsState";
 import {windowFunctions} from "./scripts/WindowFunctions";
 
 function App() {
-    const initialSettingsState : SettingsState = {
+    const initialSettingsState: SettingsState = {
         freqResolution: 0,
         timeResolution: 1500,
         timeSamplesOverlap: 750,
@@ -34,10 +34,11 @@ function App() {
         <Flex h={"100vh"} direction={"column"}>
             <Header/>
             <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" flexGrow={1}>
-                <GridItem bg={"purple.700"} colSpan={{base: 6, md: 4}} p={5}>
+                <GridItem bg={"gray.700"} colSpan={{base: 6, md: 4}} p={5}>
                     <Canvas settings={settingsState} recorder={recorder}/>
                 </GridItem>
-                <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5}>
+                <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5} overflowY={{base: "hidden", md: "scroll"}}
+                          maxH={{base: 'none', md: '80vh'}}>
                     <Settings settings={settingsState} recorder={recorder} settingsSetter={setSettingsState}
                               recorderSetter={setRecorder}/>
                 </GridItem>
