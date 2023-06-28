@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/spectrogram-live/static/css/main.073c9b0a.css",
+    "main.js": "/spectrogram-live/static/js/main.dc5d6129.js",
+    "static/js/787.b335b6da.chunk.js": "/spectrogram-live/static/js/787.b335b6da.chunk.js",
+    "index.html": "/spectrogram-live/index.html",
+    "main.073c9b0a.css.map": "/spectrogram-live/static/css/main.073c9b0a.css.map",
+    "main.dc5d6129.js.map": "/spectrogram-live/static/js/main.dc5d6129.js.map",
+    "787.b335b6da.chunk.js.map": "/spectrogram-live/static/js/787.b335b6da.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.dc5d6129.js"
+  ]
+}
