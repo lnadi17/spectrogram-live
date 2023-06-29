@@ -6,6 +6,8 @@ This is a React application that enables real-time visualization of audio spectr
 
 You can visit the demo website at [https://lnadi17.github.io/spectrogram-live](https://lnadi17.github.io/spectrogram-live)
 
+![Website Demo](./demo.gif)
+
 ## Features
 
 - Real-time audio processing and visualization
