@@ -33,12 +33,11 @@ function App() {
     return (
         <Flex h={"100vh"} direction={"column"}>
             <Header/>
-            <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" flexGrow={1}>
-                <GridItem bg={"gray.700"} colSpan={{base: 6, md: 4}} p={5}>
+            <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" flexGrow={1} overflow={"hidden"}>
+                <GridItem bg={"gray.700"} colSpan={{base: 6, md: 4}} p={5} h={"100%"}>
                     <Canvas settings={settingsState} recorder={recorder}/>
                 </GridItem>
-                <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5} overflowY={{base: "hidden", md: "scroll"}}
-                          maxH={{base: 'none', md: '85vh'}}>
+                <GridItem colSpan={{base: 6, md: 2}} bg={"gray.600"} p={5} h={"100%"} overflowY={"auto"}>
                     <Settings settings={settingsState} recorder={recorder} settingsSetter={setSettingsState}
                               recorderSetter={setRecorder}/>
                 </GridItem>
